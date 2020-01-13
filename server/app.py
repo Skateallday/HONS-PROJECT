@@ -3,13 +3,15 @@ import os
 import sqlite3
 from flask import Flask, render_template, request, session, g, redirect, flash, url_for
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
-
+from forms.forms import registration, logon
+from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 
 
 
 app = Flask(__name__, static_folder='../static', template_folder='../static/frontend/templates')
 bcrypt = Bcrypt(app)
+app.config.from_object(Config)
 csrf = CSRFProtect(app)
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
 

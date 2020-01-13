@@ -3,8 +3,37 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 20vmin;
   pointer-events: none;
+}
+
+.SignUpContainer{
+  margin-top:10vmin;
+  margin-left:15vmin;
+  margin-bottom:10vmin;
+  background: #264f78;
+  border-radius: 30px;
+  padding:20px;
+}
+.button {
+  background-color: #023837; 
+  color: #023837;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 30px;
+}
+
+.form{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -13,13 +42,19 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
+.SignUp-background {
+  background-image: url('./background2.jpg');
+  background-size: cover;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+.LoginBackground {
+  background-image: url('./login2.jpg');
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -28,11 +63,4 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
