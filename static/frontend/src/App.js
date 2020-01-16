@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './possiblelogos.svg';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {
@@ -10,11 +10,25 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import $ from 'jquery';
 
 
 
-export default function App() {
 
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+  // This binding is necessary to make `this` work in the callback
+  this.getPythonSignUp = this.getPythonSignUp.bind(this);
+  }
+  getPythonSignUp() {
+    $.get(window.location.href + 'register', (data) => {
+      console.log('working');
+  });
+        
+    };
+
+render(){
   return (
     <Router>    
        
@@ -30,19 +44,13 @@ export default function App() {
           </Route>
           
         </Switch>
-     
-    </Router>
-  );
-}
 
-function SignUp() {
-  return(
-        <div className="App">
-      <div className="SignUp-background">
-        
-        <div className="SignUpContainer">
-          <img src={logo} alt="logo" className="App-logo"/>
-          <Form>
+     <div className="App">
+     <div className="SignUp-background">
+       
+       <div className="SignUpContainer">
+         <img src={logo} alt="logo" className="App-logo"/>
+         <Form>
           <Form.Group controlId="formBasicUsername"> 
               <Form.Label>Username</Form.Label>
               <Form.Control type="password" placeholder="Username" />
@@ -61,8 +69,50 @@ function SignUp() {
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
             
-            <Button className="button button1" type="submit">
-            Register
+            <Button onClick={this.getPythonSignUp} className="button button1" type="submit">
+            Sign Up Now!
+            </Button>
+            <p>Or</p>
+            <Button variant="success" title="Go to Details">
+            <Link to="/LogIn">LogIn</Link>
+            </Button>
+          </Form>
+       </div>  
+     </div>
+   </div>     
+    </Router>
+  );}
+}
+
+function SignUp() {
+  return(
+        <div className="App">
+      <div className="SignUp-background">
+        
+        <div className="SignUpContainer">
+          <img src={logo} alt="logo" className="App-logo"/>
+          <Form>
+          <Form.Group controlId="formBasicUsername"> 
+          
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="password" placeholder="Username" />
+            </Form.Group>
+
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" />
+            </Form.Group>
+            
+            <Button  className="button button1" type="submit">
+            Sign Up Now!
             </Button>
             <p>Or</p>
             <Button variant="success" title="Go to Details">
@@ -86,6 +136,9 @@ function SignUp() {
           <img src={logo} alt="logo" className="App-logo"/>
           <Form>
           <Form.Group controlId="formBasicUsername">
+          <Form.Text className="text-muted">
+                Welcome Back!
+              </Form.Text>
               <Form.Label>Username / Email</Form.Label>
               <Form.Control type="password" placeholder="Username" />
               <Form.Text className="text-muted">

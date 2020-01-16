@@ -9,7 +9,7 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 
 
 
-app = Flask(__name__, static_folder='../static', template_folder='../static/frontend/templates')
+app = Flask(__name__, static_folder='../static/frontend/public/', template_folder='../static/frontend/public/')
 bcrypt = Bcrypt(app)
 app.config.from_object(Config)
 csrf = CSRFProtect(app)
@@ -28,6 +28,7 @@ def index():
 @app.route('/home')
 def home():
     return render_template('index.html')
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -54,7 +55,7 @@ def register():
                     return redirect('login')
             return render_template("register.html", form=registerForm)
 
-    return render_template('register.html', form=registerForm)
+    return render_template('signup.html', form=registerForm)
 
 
 if __name__ == '__main__':
