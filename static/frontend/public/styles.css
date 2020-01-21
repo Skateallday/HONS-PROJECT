@@ -1,0 +1,18 @@
+.body{
+    background-image:url("background2.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 35vmin ;
+
+}
+
+h1{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#ff6974;
+
+}
+
+h3{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#fff;
+}

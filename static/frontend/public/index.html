@@ -14,7 +14,7 @@
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="stylesheet" href="/static/frontend/dist/styles.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='frontend/public/styles.css')}}">
     <link
   rel="stylesheet"
   href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -33,8 +33,13 @@
     -->
     <title>Crammer</title>
   </head>
-  <body><p>IS THIS LOAD?</p>
-    <div id="App"></div>
+  <body class="body">
+
+    <h3>What's your thing?</h3>
+    <h3>Find your group.</h3>
+    <h3>Show us what you got!</h3>
+    <h1>Crammer</h1>
+      <div id="App"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
