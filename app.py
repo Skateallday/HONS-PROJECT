@@ -9,7 +9,7 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 
 
 
-app = Flask(__name__, static_folder='../static/frontend/public/', template_folder='../static/frontend/public/')
+app = Flask(__name__, static_folder='static/frontend/public/', template_folder='static/frontend/public/')
 bcrypt = Bcrypt(app)
 app.config.from_object(Config)
 csrf = CSRFProtect(app)
