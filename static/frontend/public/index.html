@@ -21,7 +21,7 @@
   integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
   crossorigin="anonymous"
 />
-    <link rel="manifest" href="/static/frontend/public/manifest.json" />
+    <link rel="manifest" href="{{url_for('static', filename='frontend/public/manifest.json')}}" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -31,7 +31,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Crammer</title>
+    <title>Crammer - A New Way To Be Online</title>
   </head>
   <body class="body">
 
@@ -50,7 +50,7 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <script src="/bundle.js" type="text/javascript"></script>
+    <script src="{{url_for('static', filename='frontend/public/bundle.js')}}" type="text/javascript"></script>
 
 
   </body>

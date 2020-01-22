@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './possiblelogos.svg';
+import logo from '../public/possiblelogos.svg';
 import './App.css';
 import 'bootstrap';
 import Button from 'react-bootstrap/Button';
