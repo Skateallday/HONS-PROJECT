@@ -1,18 +1,67 @@
-.body{
-    background-image:url("background2.jpg");
+.App {
+    text-align: center;
+  }
+  
+  .App-logo {
+    height: 20vmin;
+    pointer-events: none;
+  }
+  
+  .SignUpContainer{
+    margin-top:10vmin;
+    margin-bottom:10vmin;
+    background: #264f78;
+    border-radius: 30px;
+    padding:20px;
+  }
+  
+  .body{
+    background-color: #01162B;
+    background-image: url(background2.jpg);
     background-size: cover;
-    background-repeat: no-repeat;
-    padding: 35vmin ;
+  }
 
-}
-
-h1{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color:#ff6974;
-
-}
-
-h3{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color:#fff;
-}
+  .crammer{
+    color:#FF6974;
+    font-size:58px;
+  }
+  .button {
+    background-color: #023837; 
+    color: #023837;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 30px;
+  }
+  
+  .form{
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  
+  .SignUp-background {
+  
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  .LoginBackground {
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .App-link {
+    color: #61dafb;
+  }
+  

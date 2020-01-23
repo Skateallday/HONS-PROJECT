@@ -13,7 +13,7 @@ from datetime import datetime, date, timedelta
 from flask import session
 from wtforms.validators import NumberRange
 
-class logon(FlaskForm):
+class loginForm(FlaskForm):
     username = StringField('username', validators=[DataRequired(), Length(min=2, max=30)])
     password = PasswordField('password', validators=[DataRequired(), Length(min=2, max=30)])
     submit = SubmitField('login')
