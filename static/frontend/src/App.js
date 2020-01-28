@@ -1,145 +1,49 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import 'bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 import $ from 'jquery';
-
-import logo from './login2.jpg'
 import './App.css';
+import CreatePost from './createPost';
+import CreateGroup from './createGroup';
+
 
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    
-  // This binding is necessary to make `this` work in the callback
-  this.getPythonSignUp = this.getPythonSignUp.bind(this);
+    this.state = {render:''}
+
   }
-  getPythonSignUp() {
-    $.get(window.location.href + 'register', (data) => {
-      console.log('working');
-  });
-        
-    };
-    
+    create(compName, e){
+      console.log(compName);
+      this.setState({render:compName});
+    }
 
-render(){
-  return (
-    
-      <div className="App">
-        <div className="LoginBackground">  
-    <Router>       
-            {/* A <Switch> looks through its children <Route>s and
-                renders the first one that matches the current URL. */}
-           
-          
- <Switch>
-              <Route path="/LogIn">
-                <LogIn />
-              </Route>
-              <Route path="/SignUp">
-                <SignUp />
-              </Route>
-              
-            </Switch>
-        </Router>
-        </div>
-        </div>
-  );}
-}
+    _renderSubComp(){
+      switch(this.state.render){
+        case 'createPost': return <CreatePost />
+        case 'createGroup': return <CreateGroup />
+      }
+    }
+  
 
-function getPythonSignUp(){
-  $.get(window.location.href + 'register', (data) => {
-    console.log('working');
-});
-      
-}
+  render(){
+    return (      
+    <div className="actions">
+      <Button onClick={this.create.bind(this, 'createGroup')}>Create Group</Button>    
+      <Button onClick={this.create.bind(this, 'createPost')}>Create Post</Button>
+      {this._renderSubComp()}
 
-function LogIn() {
-  return (
-        
-        <div className="SignUpContainer">
-          <img src={logo} alt="logo" className="App-logo"/>
-          <Form className="form">
-          <Form.Group controlId="formBasicUsername">
-          <Form.Text className="text-muted">
-                Welcome Back!
-              </Form.Text>
-              </Form.Group>
-              <Form.Group>
-              <Form.Label>Username / Email</Form.Label>
-              <Form.Control type="password" placeholder="Username" />
-              </Form.Group>
-              <Form.Group>
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
+    </div>
 
-            
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
-            
-            <Button  className="button button1" type="submit" onClick={getPythonSignUp}>
-            Login
-            </Button>
-            
-            <p>Or</p>
-            <Button className="button button1" type="submit">
-            <Link to="/SignUp">Sign Up</Link>
-            </Button>
-          </Form>
-
-        </div> 
-  );
+    );
+  }
 }
 
 
-function SignUp() {
-  return(
-        
-        <div className="SignUpContainer">
-          <img src={logo} alt="logo" className="App-logo"/>
-          <Form>
-          <Form.Group controlId="formBasicUsername"> 
-          
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="password" placeholder="Username" />
-            </Form.Group>
+ReactDOM.render(<App />, document.getElementById('App'));
 
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-              <Form.Group>
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
 
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
-            
-            <Button  className="button button1" type="submit" onClick={getPythonSignUp}>
-            Sign Up Now!
-            </Button>
-            <p>Or</p>
-            <Button className="button button1" title="Go to Details">
-            <Link to="/LogIn">LogIn</Link>
-            </Button>
-          </Form>
-
-        </div> 
-  );
-  };
 

@@ -26,7 +26,7 @@ def before_request():
 def dashboard():        
         if g.username:
                 
-                return render_template('dashboard.html')
+                return render_template('dashboard.html', username=g.username)
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
@@ -65,7 +65,11 @@ def logout():
         session['logged_in'] = True
         session.clear()
         flash("You have successfully logged out.")
-        return redirect('home')
+        return redirect('LogIn')
+
+@app.route("/dashboard/Post")
+def post():        
+        return redirect('dashboard')
 
 
 @app.route('/SignUp', methods=['GET', 'POST'])

@@ -3,10 +3,12 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
 const config = {
-  entry:  __dirname + '/src/index.js',
+  entry:  {
+  "index" :__dirname + '/src/index.js',
+  "post" :__dirname + '/src/post.js'},
   output: {
     path:__dirname +"/public/",
-      filename: 'bundle.js'
+    filename: "[name].js",
   },
   resolve: {
       extensions: [".js", ".jsx", ".css"]
