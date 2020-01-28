@@ -16,13 +16,18 @@
   }
   
   .body{
+    font-family: 'Open Sans', sans-serif;
     color:#fff;
     background-color: #01162B;
     background-image: url('./background2.jpg');
     background-size: cover;
+    background-repeat: no-repeat;
   }
-
+.logins{
+  margin-top:25vh;
+}
   .crammer{
+    font-family: 'Open Sans', sans-serif;
     color:#FF6974;
     font-size:58px;
   }

@@ -1,4 +1,4 @@
-{% extends "template.html" %}
+{% extends "index.html" %}
 {% block content %}
         
 
@@ -11,45 +11,47 @@
 </div>
 {% endfor %}
 
-
+<div class="row">
+  <div class="col-sm-12 ">
 <h1>Sign up</h1>
-<p class="important">
-<div class="container">
    <form method="POST" action="" enctype="multipart/form-data">
       {{ form.hidden_tag() }} {{ form.csrf_token() }}
   
-  
-  <label for="username">Username</label>
-  {% if request.method == 'POST' %}
-  {% for error in form.username.errors %}
-  <span class="errors">[{{ error }}]</span>
-  {% endfor %}
-  {% endif %}
-  {{ form.username(class="form-control") }}
+    
+    <label for="username">Username</label>
+    {% if request.method == 'POST' %}
+    {% for error in form.username.errors %}
+    <span class="errors">[{{ error }}]</span>
+    {% endfor %}
+    {% endif %}
+    {{ form.username(class="form-control") }}
 
-  <label for="password">Password</label>
-  {% if request.method == 'POST' %}
-  {% for error in form.password.errors %}
-  <span class="errors">[{{ error }}]</span>
-  {% endfor %}
-  {% endif %}
-  {{ form.password(class="form-control") }}
+    <label for="password">Password</label>
+    {% if request.method == 'POST' %}
+    {% for error in form.password.errors %}
+    <span class="errors">[{{ error }}]</span>
+    {% endfor %}
+    {% endif %}
+    {{ form.password(class="form-control") }}
 
-  <label for="emailAddress">Email Address</label>
-  {% if request.method == 'POST' %}
-  {% for error in form.emailAddress.errors %}
-  <span class="errors">[{{ error }}]</span>
-  {% endfor %}
-  {% endif %}
-  {{ form.emailAddress(class="form-control") }}
+    <label for="emailAddress">Email Address</label>
+    {% if request.method == 'POST' %}
+    {% for error in form.emailAddress.errors %}
+    <span class="errors">[{{ error }}]</span>
+    {% endfor %}
+    {% endif %}
+    {{ form.emailAddress(class="form-control") }}
 
-  {{ form.submit(class="btn btn-danger") }}
-</form> 
+    {{ form.submit(class="btn btn-danger") }}
+  </form> 
+</div>
+</div><div class="row">
+<div class="col-sm-12 ">
+  <p>Or...</p>
+  <a href={{url_for('LogIn')}} class="btn btn-primary">Click here to login</a>
+</div>
+
 </div>
 
 
-
-
-
-
-          {% endblock %}
+{% endblock %}

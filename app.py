@@ -33,7 +33,6 @@ def dashboard():
 
 
 
-@app.route('/', methods=['GET', 'POST'])
 @app.route('/LogIn/', methods=['GET', 'POST'])
 def LogIn():
         form = loginForm(request.form)       
@@ -53,12 +52,9 @@ def LogIn():
                                 return redirect(url_for('dashboard'))
                         else:
                                 flash('Either username or password was not recognised')
-                                return render_template('index.html', form=form) 
-
-                                 
-                return render_template("index.html", form=form)
-        
-        return render_template("index.html", form=form)
+                                return render_template('login.html', form=form)                                 
+                return render_template("login.html", form=form)        
+        return render_template("login.html", form=form)
 
 @app.route("/logout")
 def logout():        
@@ -72,7 +68,7 @@ def post():
         return redirect('dashboard')
 
 
-@app.route('/SignUp', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def SignUp():
     registerForm = registration(request.form)   
 
