@@ -14,10 +14,7 @@
     border-radius: 30px;
     padding:20px;
   }
-  .profilePic{
-    width:35vmin;
-    height:100%;
-  }
+  
   .body{
     font-family: 'Open Sans', sans-serif;
     color:#fff;
@@ -28,6 +25,17 @@
   }
 .logins{
   margin-top:25vh;
+}
+.status-box{
+  background-color:#023837;
+  border-radius: 15px;
+padding:15px;}
+
+.previousPosts{
+  background-color:#023837;
+  border-radius: 15px;
+padding:15px;
+margin-top:5vmin;
 }
   .crammer{
     font-family: 'Open Sans', sans-serif;

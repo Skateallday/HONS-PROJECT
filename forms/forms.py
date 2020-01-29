@@ -36,3 +36,10 @@ class createAccount(FlaskForm):
     imageName = StringField('imageName', validators=[DataRequired(), Length(min=2, max=30)])
     submit = SubmitField('Finish Creating Account!')
 
+class postStatus(FlaskForm):
+    postTitle = StringField('title', validators=[DataRequired(), Length(min=2, max=50)])
+    postContent = StringField('content', validators=[DataRequired()], widget=TextArea())
+    category = SelectField('category', choices=[('Art', 'Art'), ('Music', 'Music'), ('Sports', 'Sports'), ('Travel', 'Travel'),('Food', 'Food'), ('Gaming', 'Gaming'), ('Film', 'Film'), ('Politics', 'Politics')])
+    upload = FileField('Upload Profile Image')
+    submit = SubmitField('Send it!')
+

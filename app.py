@@ -4,7 +4,7 @@ import sqlite3
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, session, g, redirect, flash, url_for
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
-from forms.forms import registration, loginForm, createAccount
+from forms.forms import registration, loginForm, createAccount, postStatus
 from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 
@@ -72,22 +72,44 @@ def logout():
 def post():        
         return redirect('dashboard')
         
-@app.route("/profile")
+@app.route("/profile", methods=['GET', 'POST'])
 def profile():      
-        if g.username:  
+        if g.username:
+                form = postStatus(request.form)  
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
 
                 c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (g.username, ))
-                results = c.fetchall()   
+                results = c.fetchall()
+                c.execute('SELECT * FROM userPosts WHERE username LIKE(?)', (g.username, ))  
+                posts = c.fetchall()
+                print(posts) 
                 if results:
                         for row in results:
-                                username = row[0]
-                                bio = row[3]
-                                img_url = 'static/' +row[4]
-                                interests = row[5]
-                                return render_template("profile.html", bio=bio, img_url=img_url, interests=interests, username=g.username)
+                                for post in posts:
+                                        username = row[0]
+                                        bio = row[3]
+                                        img_url = 'static/' +row[4]
+                                        interests = row[5]
+                                        postTitle = post[1]
+                                        postContent = post[2]
+                                        category = post[3]
+                                        if request.method == 'POST':
+                                                conn = sqlite3.connect('userData.db')
+                                                print ("User Posts data opened")
+                                                c = conn.cursor()
+                                                newPost = [(g.username, (form.postTitle.data), (form.postContent.data), (form.category.data))]
+                                                with conn:
+                                                        try:
+                                                                insertPost = '''INSERT INTO userPosts (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
+                                                                c.executemany(insertPost, newPost)
+                                                                print ("Insert correctly")
+                                                        except Exception as e: print(e)                                                        
+                                                        flash((g.username) + " Successfully Posted!!")
+                                                        return render_template("profile.html", form=form, postTitle=postTitle, postContent=postContent, category=category, bio=bio, img_url=img_url, interests=interests, username=g.username)
+                                return render_template("profile.html", form=form, bio=bio, postTitle=postTitle, postContent=postContent, category=category, img_url=img_url, interests=interests, username=g.username)                
+                
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
