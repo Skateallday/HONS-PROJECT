@@ -14,7 +14,12 @@
     border-radius: 30px;
     padding:20px;
   }
-  
+  .missing{
+    background:#023837;
+    margin-top:15vmin;
+    padding:15vmin;
+    border-radius: 15px;
+  }
   .body{
     font-family: 'Open Sans', sans-serif;
     color:#fff;
