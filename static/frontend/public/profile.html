@@ -1,0 +1,44 @@
+{% extends "template.html" %}
+{% block content %}
+   
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">
+      &times;
+    </button>
+    {{ message }}
+</div>
+{% endfor %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12"><h1>{{username}}</h1></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6"><a href={{url_for('profile')}}><img class="profilePic" src="{{img_url}}"></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">    
+         <p>{{bio}}</p>
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-sm-6">    
+         <p>{{interests}}</p>
+        </div>        
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <a href={{url_for('addAccount')}} class="btn btn-primary">Click here to edit profile</a>
+
+        </div>
+    </div>
+
+       
+
+    </div>
+
+
+{% endblock %}
