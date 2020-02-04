@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% block content %}
+        
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">
+      &times;
+    </button>
+    {{ message }}
+</div>
+{% endfor %}
+
+<div class="row missing">
+  <div class="col-sm-12 ">
+<h1>What's Crammer then?</h1>
+<p>Crammer is the product of an honours project created for Edinburgh Napier University. It began with a research paper into how people use social media and how this affects their lifes day to day. This study was also paired with the ideologies of "social capital" and "Dunbar's Number"</p>
+<p>This project was created to find out how people really interact with each other while trying to push together good, solid relationships. Social capital is the study of what a connection really means, while Dunbar's number suggests that any group of over 150 people does not work.</p>
+<p>Here, on Crammer we want you to be tight with 150 people! We want you to show off your best to the 150 you chose. But not just once, as many times as you want! Each group you create or an invited to will have a limit of 150 people, allowing your voice to be hear and enrichening your online social connections.</p>
+
+<a class="btn btn-success" href={{url_for('SignUp')}}>Click here to sign up!</a>
+
+{% endblock %}

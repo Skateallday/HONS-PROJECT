@@ -18,6 +18,10 @@ UPLOAD_FOLDER = 'static/frontend/public/profilePhotos'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['jpg'])
 
+@app.route('/aboutUs')
+def aboutUs():
+        return render_template('aboutUs.html')
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/signup', methods=['GET', 'POST'])
 def SignUp():
