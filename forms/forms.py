@@ -43,3 +43,10 @@ class postStatus(FlaskForm):
     upload = FileField('Upload Profile Image')
     submit = SubmitField('Send it!')
 
+class createGroup(FlaskForm):
+    groupName = StringField('title', validators=[DataRequired(), Length(min=2, max=50)])
+    groupBio = StringField('content', validators=[DataRequired()], widget=TextArea())
+    groupType = SelectField('category', choices=[('Art', 'Art'), ('Music', 'Music'), ('Sports', 'Sports'), ('Travel', 'Travel'),('Food', 'Food'), ('Gaming', 'Gaming'), ('Film', 'Film'), ('Politics', 'Politics')])
+    upload = FileField('Upload Profile Image')
+    submit = SubmitField('Send it!')
+

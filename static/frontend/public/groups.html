@@ -13,27 +13,25 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>Welcome {{username}}</h1>
+            <h1>Join a group {{username}} today!</h1>
             <div id="App" />
             <script src={{url_for('static', filename='frontend/public/index.js')}} type="text/javascript"></script>
 
-                {% for post in posts %}
+               
                 <div class="previousPosts">
-                    <div class="row">
+                    <div class="row"> {% for post in posts %}
                         <div class="col-sm-3">
-                            <img class="dashboardPhotos" src={{url_for('static', filename=post[1])}}>
-                        </div>
-                        <div class="col-sm-9">
+                            <img class="dashboardPhotos" src={{url_for('static', filename=post[1])}}>                        
                             <h3>{{post[0]}}</h3>
                             <h2>{{post[2]}}</h2>
                             <p>{{post[3]}}</p>
                             <p>{{post[4]}}</p> 
                             <p>{{post[5]}}</p>
-                        </div>
+                        </div> {% endfor %}
                     </div>
                     
                 </div>
-                {% endfor %}
+               
                                
             
         </div>

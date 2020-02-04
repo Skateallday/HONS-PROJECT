@@ -4,7 +4,7 @@ import sqlite3
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, session, g, redirect, flash, url_for
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
-from forms.forms import registration, loginForm, createAccount, postStatus
+from forms.forms import registration, loginForm, createAccount, postStatus, createGroup
 from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from datetime import datetime
@@ -32,14 +32,15 @@ def dashboard():
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
-                c.execute('SELECT * FROM userPost')  
+                c.execute('SELECT author, imageName, postTitle, postContent, category, dateTime FROM accountData INNER JOIN userPost ON userPost.author = accountData.username ORDER BY dateTime DESC');  
                 posts = c.fetchall()
                 print(posts) 
                 for post in posts:
-                        user = post[0]
-                        postTitle = post[1]
-                        postContent = post[2]
-                        category = post[3]
+                        author = post[0]
+                        imageName = [1]
+                        postTitle = post[2]
+                        postContent = post[3]
+                        category = post[4]
                         if request.method == 'POST':
                                 conn = sqlite3.connect('userData.db')
                                 print ("User Posts data opened")
@@ -57,6 +58,23 @@ def dashboard():
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
+
+@app.route("/groups", methods=['GET', 'POST'])
+def groups():        
+        if g.username:
+                form = createGroup(request.form)  
+                conn =sqlite3.connect('userData.db')
+                print ("Opened database successfully")
+                c = conn.cursor()
+                c.execute('SELECT groupName, groupBio, groupType, groupImage FROM groups');  
+                groups = c.fetchall()
+                print(groups)                                                      
+                return render_template('groups.html', groups=groups, username=g.username)
+        else:
+                flash('Please Login to continue')
+                return redirect('Login')
+
+
 
 
 
@@ -102,7 +120,7 @@ def profile():
 
                 c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (g.username, ))
                 results = c.fetchall()
-                c.execute('SELECT * FROM userPost WHERE username LIKE(?)', (g.username, ))  
+                c.execute('SELECT * FROM userPost WHERE author LIKE(?) ORDER BY dateTime DESC', (g.username, ))  
                 posts = c.fetchall()
                 print(results) 
                 if results:
@@ -146,7 +164,7 @@ def profileUserName(user):
         c = conn.cursor()
         c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (user, ))
         results = c.fetchall()
-        c.execute('SELECT * FROM userPost WHERE username LIKE(?)', (user, ))  
+        c.execute('SELECT * FROM userPost WHERE author LIKE(?)', (user, ))  
         posts = c.fetchall()
         print(results) 
         print(posts)

@@ -27,9 +27,16 @@
     background-image: url('./background2.jpg');
     background-size: cover;
     background-repeat: no-repeat;
+    background-attachment: fixed;
+
   }
 .logins{
   margin-top:25vh;
+}
+
+.dashboardPhotos{
+  width:100%;
+  height:auto;
 }
 .status-box{
   margin-top:5vmin;
