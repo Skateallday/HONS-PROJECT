@@ -7,9 +7,7 @@ from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
 from forms.forms import registration, loginForm, createAccount, postStatus
 from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
-
-
-
+from datetime import datetime
 
 app = Flask(__name__, template_folder='static/frontend/public/')
 bcrypt = Bcrypt(app)
@@ -30,8 +28,32 @@ def before_request():
 @app.route("/dashboard")
 def dashboard():        
         if g.username:
-                
-                return render_template('dashboard.html', username=g.username)
+                form = postStatus(request.form)  
+                conn =sqlite3.connect('userData.db')
+                print ("Opened database successfully")
+                c = conn.cursor()
+                c.execute('SELECT * FROM userPost')  
+                posts = c.fetchall()
+                print(posts) 
+                for post in posts:
+                        user = post[0]
+                        postTitle = post[1]
+                        postContent = post[2]
+                        category = post[3]
+                        if request.method == 'POST':
+                                conn = sqlite3.connect('userData.db')
+                                print ("User Posts data opened")
+                                c = conn.cursor()
+                                newPost = [(g.username, (form.postTitle.data), (form.postContent.data), (form.category.data))]
+                                with conn:
+                                        try:
+                                                insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
+                                                c.executemany(insertPost, newPost)
+                                                print ("Insert correctly")
+                                        except Exception as e: print(e)                                                        
+                                        flash((g.username) + " Successfully Posted!!")
+                                        return render_template("profile.html", form=form, postTitle=postTitle, postContent=postContent, category=category)                                        
+                return render_template('dashboard.html', posts=posts, username=g.username)
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
@@ -42,8 +64,7 @@ def dashboard():
 def LogIn():
         form = loginForm(request.form)       
         if request.method == 'POST':  
-                conn = sqlite3.connect('userData.db')
-                
+                conn = sqlite3.connect('userData.db')                
                 with conn:
                         c = conn.cursor()
                         find_user = ("SELECT * FROM accountData WHERE username = ?")
@@ -51,8 +72,7 @@ def LogIn():
                         results =c.fetchall()
                         
                         userResults = results[0]
-                        if bcrypt.check_password_hash(userResults[1],(form.password.data)):
-                                session['logged_in'] = True
+                        if bcrypt.check_password_hash(userResults[2],(form.password.data)):
                                 session['username'] = (form.username.data)
                                 return redirect(url_for('dashboard'))
                         else:
@@ -82,7 +102,7 @@ def profile():
 
                 c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (g.username, ))
                 results = c.fetchall()
-                c.execute('SELECT * FROM userPosts WHERE username LIKE(?)', (g.username, ))  
+                c.execute('SELECT * FROM userPost WHERE username LIKE(?)', (g.username, ))  
                 posts = c.fetchall()
                 print(results) 
                 if results:
@@ -96,19 +116,20 @@ def profile():
                                                 postTitle = post[1]
                                                 postContent = post[2]
                                                 category = post[3]
-                                                if request.method == 'POST':
+                                                return render_template("profile.html", form=form, postTitle=postTitle, postContent=postContent, category=category, bio=bio, img_url=img_url, interests=interests, username=g.username)
+                                else:
+                                        if request.method == 'POST':
                                                         conn = sqlite3.connect('userData.db')
                                                         print ("User Posts data opened")
                                                         c = conn.cursor()
                                                         newPost = [(g.username, (form.postTitle.data), (form.postContent.data), (form.category.data))]
                                                         with conn:
                                                                 try:
-                                                                        insertPost = '''INSERT INTO userPosts (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
+                                                                        insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category, dateTime) VALUES(?,?,?,?, datetime('now', 'localtime'))'''
                                                                         c.executemany(insertPost, newPost)
                                                                         print ("Insert correctly")
                                                                 except Exception as e: print(e)                                                        
                                                                 flash((g.username) + " Successfully Posted!!")
-                                                                return render_template("profile.html", form=form, postTitle=postTitle, postContent=postContent, category=category, bio=bio, img_url=img_url, interests=interests, username=g.username)
                         return render_template("profile.html", bio=bio, img_url=img_url, interests=interests, form=form, username=g.username)                
                 
         else:
@@ -125,7 +146,7 @@ def profileUserName(user):
         c = conn.cursor()
         c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (user, ))
         results = c.fetchall()
-        c.execute('SELECT * FROM userPosts WHERE username LIKE(?)', (user, ))  
+        c.execute('SELECT * FROM userPost WHERE username LIKE(?)', (user, ))  
         posts = c.fetchall()
         print(results) 
         print(posts)
@@ -136,7 +157,7 @@ def profileUserName(user):
                 newPost = [(user, (form.postTitle.data), (form.postContent.data), (form.category.data))]
                 with conn:
                         try:
-                                insertPost = '''INSERT INTO userPosts (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
+                                insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
                                 c.executemany(insertPost, newPost)
                                 print ("Insert correctly")
                         except Exception as e: print(e)                                                        
@@ -146,7 +167,7 @@ def profileUserName(user):
                         for row in results:
                                 username = row[0]
                                 bio = row[3]
-                                img_url = 'static/' +row[4]
+                                img_url = '../../static/' +row[4]
                                 interests = row[5]                                
                                 if posts:
                                         for post in posts:
@@ -232,6 +253,6 @@ def addAccount():
 @app.errorhandler(404)
 def page_not_found(e):        
         return render_template('404.html'), 404
-        
+
 if __name__ == '__main__':
       app.run('localhost', 5000, debug=True)
