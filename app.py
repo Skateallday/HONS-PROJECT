@@ -18,237 +18,33 @@ UPLOAD_FOLDER = 'static/frontend/public/profilePhotos'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['jpg'])
 
-@app.before_request
-def before_request():
-        g.username = None
-        if 'username' in session:
-                g.username = session['username']
-
-
-@app.route("/dashboard")
-def dashboard():        
-        if g.username:
-                form = postStatus(request.form)  
-                conn =sqlite3.connect('userData.db')
-                print ("Opened database successfully")
-                c = conn.cursor()
-                c.execute('SELECT * FROM userPost')  
-                posts = c.fetchall()
-                print(posts) 
-                for post in posts:
-                        user = post[0]
-                        postTitle = post[1]
-                        postContent = post[2]
-                        category = post[3]
-                        if request.method == 'POST':
-                                conn = sqlite3.connect('userData.db')
-                                print ("User Posts data opened")
-                                c = conn.cursor()
-                                newPost = [(g.username, (form.postTitle.data), (form.postContent.data), (form.category.data))]
-                                with conn:
-                                        try:
-                                                insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
-                                                c.executemany(insertPost, newPost)
-                                                print ("Insert correctly")
-                                        except Exception as e: print(e)                                                        
-                                        flash((g.username) + " Successfully Posted!!")
-                                        return render_template("profile.html", form=form, postTitle=postTitle, postContent=postContent, category=category)                                        
-                return render_template('dashboard.html', posts=posts, username=g.username)
-        else:
-                flash('Please Login to continue')
-                return redirect('Login')
-
-
-
-@app.route('/Login/', methods=['GET', 'POST'])
-def LogIn():
-        form = loginForm(request.form)       
-        if request.method == 'POST':  
-                conn = sqlite3.connect('userData.db')                
-                with conn:
-                        c = conn.cursor()
-                        find_user = ("SELECT * FROM accountData WHERE username = ?")
-                        c.execute(find_user, [(form.username.data)])  
-                        results =c.fetchall()
-                        
-                        userResults = results[0]
-                        if bcrypt.check_password_hash(userResults[2],(form.password.data)):
-                                session['username'] = (form.username.data)
-                                return redirect(url_for('dashboard'))
-                        else:
-                                flash('Either username or password was not recognised')
-                                return render_template('login.html', form=form)                                 
-                return render_template("login.html", form=form)        
-        return render_template("login.html", form=form)
-
-@app.route("/logout")
-def logout():        
-        session['logged_in'] = True
-        session.clear()
-        flash("You have successfully logged out.")
-        return redirect('Login')
-
-@app.route("/dashboard/Post")
-def post():        
-        return redirect('dashboard')
-        
-@app.route("/profile", methods=['GET', 'POST'])
-def profile():      
-        if g.username:
-                form = postStatus(request.form)  
-                conn =sqlite3.connect('userData.db')
-                print ("Opened database successfully")
-                c = conn.cursor()
-
-                c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (g.username, ))
-                results = c.fetchall()
-                c.execute('SELECT * FROM userPost WHERE username LIKE(?)', (g.username, ))  
-                posts = c.fetchall()
-                print(results) 
-                if results:
-                        for row in results:
-                                username = row[0]
-                                bio = row[3]
-                                img_url = 'static/' +row[4]
-                                interests = row[5]                                
-                                if posts:
-                                        for post in posts:
-                                                postTitle = post[1]
-                                                postContent = post[2]
-                                                category = post[3]
-                                                return render_template("profile.html", form=form, postTitle=postTitle, postContent=postContent, category=category, bio=bio, img_url=img_url, interests=interests, username=g.username)
-                                else:
-                                        if request.method == 'POST':
-                                                        conn = sqlite3.connect('userData.db')
-                                                        print ("User Posts data opened")
-                                                        c = conn.cursor()
-                                                        newPost = [(g.username, (form.postTitle.data), (form.postContent.data), (form.category.data))]
-                                                        with conn:
-                                                                try:
-                                                                        insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category, dateTime) VALUES(?,?,?,?, datetime('now', 'localtime'))'''
-                                                                        c.executemany(insertPost, newPost)
-                                                                        print ("Insert correctly")
-                                                                except Exception as e: print(e)                                                        
-                                                                flash((g.username) + " Successfully Posted!!")
-                        return render_template("profile.html", bio=bio, img_url=img_url, interests=interests, form=form, username=g.username)                
-                
-        else:
-                flash('Please Login to continue')
-                return redirect('Login')
-
-
-@app.route("/profile/user/<user>", methods=['GET', 'POST'])
-def profileUserName(user):      
-        user = user
-        form = postStatus(request.form) 
-        conn =sqlite3.connect('userData.db')
-        print ("Opened database successfully")
-        c = conn.cursor()
-        c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (user, ))
-        results = c.fetchall()
-        c.execute('SELECT * FROM userPost WHERE username LIKE(?)', (user, ))  
-        posts = c.fetchall()
-        print(results) 
-        print(posts)
-        if request.method == 'POST':
-                conn = sqlite3.connect('userData.db')
-                print ("User Posts data opened")
-                c = conn.cursor()
-                newPost = [(user, (form.postTitle.data), (form.postContent.data), (form.category.data))]
-                with conn:
-                        try:
-                                insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
-                                c.executemany(insertPost, newPost)
-                                print ("Insert correctly")
-                        except Exception as e: print(e)                                                        
-                        flash((g.username) + " Successfully Posted!!")
-        else: 
-                if results:
-                        for row in results:
-                                username = row[0]
-                                bio = row[3]
-                                img_url = '../../static/' +row[4]
-                                interests = row[5]                                
-                                if posts:
-                                        for post in posts:
-                                                postTitle = post[1]
-                                                postContent = post[2]
-                                                category = post[3]                                                
-                                                return render_template("profile.html", form=form, postTitle=postTitle, postContent=postContent, category=category, bio=bio, img_url=img_url, interests=interests, username=user)
-                                else:
-                                        return render_template("profile.html", bio=bio, img_url=img_url, interests=interests, form=form, username=user)
-                else:
-                        return redirect(404)              
-                
-
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/signup', methods=['GET', 'POST'])
 def SignUp():
-        if g.username:
-                return redirect('dashboard')
-        else:
-                registerForm = registration(request.form) 
-                if request.method == 'POST':
-                        pw_hash =bcrypt.generate_password_hash(registerForm.password.data)
-                        newEntry = [((registerForm.username.data), pw_hash, (registerForm.emailAddress.data), ' ', 'frontend/public/profilePhotos/placeholder.jpg', '' )]
+        registerForm = registration(request.form) 
+        if request.method == 'POST':
+                pw_hash =bcrypt.generate_password_hash(registerForm.password.data)
+                newEntry = [((registerForm.username.data), pw_hash, (registerForm.emailAddress.data), ' ', 'frontend/public/profilePhotos/placeholder.jpg', '' )]
 
-                        conn =sqlite3.connect('userData.db')
-                        print ("Opened database successfully")
-                        with conn:
-                                c =conn.cursor()
-                                try:
-                                        signupSQL = '''INSERT INTO accountData (username, password, email, bio, imageName, interests) VALUES(?,?,?,?,?,?)'''
-                                        c.executemany(signupSQL, newEntry)
-                                        print ("Insert correctly")
-                                except:
-                                        flash("This is already an account, please log in with those details or change details.")
-                                        return render_template("signup.html", form=registerForm)
-                                        c.commit()
-                                flash((registerForm.username.data) + " Successfully Registered!")
-                                session['logged_in'] = True
-                                session['username'] = (registerForm.username.data)
-                                return redirect('account')                                
-                        return render_template("signup.html", form=registerForm)
-                return render_template('signup.html', form=registerForm)
+                conn =sqlite3.connect('userData.db')
+                print ("Opened database successfully")
+                with conn:
+                        c =conn.cursor()
+                        try:
+                                signupSQL = '''INSERT INTO accountData (username, password, email, bio, imageName, interests) VALUES(?,?,?,?,?,?)'''
+                                c.executemany(signupSQL, newEntry)
+                                print ("Insert correctly")
+                        except:
+                                flash("This is already an account, please log in with those details or change details.")
+                                return render_template("signup.html", form=registerForm)
+                                c.commit()
+                        flash((registerForm.username.data) + " thanks for signing up! We will email you soon with more information once this site is further along the development process!")
+                        session['logged_in'] = True
+                        session['username'] = (registerForm.username.data)
+                        return redirect('signup')                                
+                return render_template("signup.html", form=registerForm)
+        return render_template('signup.html', form=registerForm)
 
-@app.route('/account', methods=['GET', 'POST'])
-def addAccount():
-        if g.username:         
-                createAccountFrom = createAccount(request.form)   
-
-                if request.method == 'POST':
-                        conn =sqlite3.connect('userData.db')
-                        print ("Opened database successfully")
-                        bio =(createAccountFrom.bio.data)
-                        f = request.files.get('upload')
-                        imageName = (createAccountFrom.imageName.data)
-                        filename = secure_filename(f.filename)
-                        filetype = filename.split('.')
-                        uploadFile = imageName + ('.') + filetype[1]
-                        f.save(os.path.join(app.config['UPLOAD_FOLDER'], uploadFile))
-                        interests = "Art"
-                        f = request.files.get('photo')
-                        entry = [(bio, 'frontend/public/profilePhotos/'+ imageName + '.' + filetype[1], interests, g.username)]
-                        with conn:
-                                c =conn.cursor()
-                                c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (g.username, ))
-                                results = c.fetchall()
-                                try:
-                                        sql = ('''UPDATE accountData SET bio=?, imageName=?, interests=? WHERE username =?''')
-                                        c.executemany(sql, entry)
-                                        message = "You have updated " + g.username + "'s profile."
-                                        flash(message)
-                                        return redirect('dashboard')
-                                except Exception as e: print(e)
-                                
-                        return render_template("createAccount.html", form=createAccountFrom)
-                else:
-                        return render_template('createAccount.html', form=createAccountFrom)
-        else:
-                flash('Please create an account to continue')
-                return redirect('signup')
-        
 
 @app.errorhandler(404)
 def page_not_found(e):        
