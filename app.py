@@ -113,7 +113,7 @@ def subgroup(subgroup):
                                 comment = [(subgroup, g.username, (form.comment.data), '0', '0' )]
                                 with conn:
                                         try:
-                                                insertPost = '''INSERT INTO groupComments (groupId, author, comment, cheers, boos) VALUES(?,?,?,?,?)'''
+                                                insertPost = '''INSERT INTO groupComments (groupId, author, comment, cheers, boos, dateTime) VALUES(?,?,?,?,?, datetime('now', 'localtime'))'''
                                                 c.executemany(insertPost, comment)
                                                 print ("Insert correctly")
                                         except Exception as e: print(e)                                                        
@@ -124,9 +124,49 @@ def subgroup(subgroup):
                 flash('Please Login to continue')
                 return redirect('Login')
 
+@app.route("/cheer/id/<commentId>")
+def cheer(commentId):
+        commentId=commentId        
+        print(commentId)
+        conn =sqlite3.connect('userData.db')
+        print ("Opened database successfully")
+        c = conn.cursor()
+        findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
+        c.execute(findgroup, commentId)
+        cheer = c.fetchall()
+        print(cheer)
+        for cheers in cheer:
+                with conn:
+                        try:
+                                c = conn.cursor()
+                                changeCheers = '''UPDATE  groupComments SET cheers = cheers + 1 WHERE commentID = ?'''
+                                c.execute(changeCheers, commentId)
+                                print ("Insert correctly")
+                        except Exception as e:print(e)
 
+        return redirect('subgroup/id/'+str(cheers[1]))
 
+@app.route("/boo/id/<commentId>")
+def boo(commentId):
+        commentId=commentId
+        print(commentId)
+        conn =sqlite3.connect('userData.db')
+        print ("Opened database successfully")
+        c = conn.cursor()
+        findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
+        c.execute(findgroup, commentId)
+        boo = c.fetchall()
+        print(boo)
+        for boos in boo:
+                with conn:
+                        try:
+                                c = conn.cursor()
+                                changeboos = '''UPDATE  groupComments SET boos = boos + 1 WHERE commentID = ?'''
+                                c.execute(changeboos, commentId)
+                                print ("Insert correctly")
+                        except Exception as e:print(e)
 
+        return redirect('subgroup/id/'+str(boos[1]))
 
 
 @app.route('/Login/', methods=['GET', 'POST'])
