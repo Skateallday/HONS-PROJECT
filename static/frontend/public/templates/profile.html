@@ -24,8 +24,13 @@
             </div>
         </div>
         <div class="col-sm-6">
+            <div class="status-box">
+
+            <button id="slider" class="btn btn-success">Create Post!</button>
             
-            <form class="status-box" method="POST" action="" enctype="multipart/form-data">
+            <div id="groupForm">
+
+            <form  method="POST" action="" enctype="multipart/form-data">
                 {{ form.hidden_tag() }} {{ form.csrf_token() }}
             
               <label for="postTitle">Post Title!</label>
@@ -69,14 +74,16 @@
               {% endif %}
               {{ form.submit(class="form-control btn btn-success") }}
               </form>
+            </div>
               <div class="previousPosts">
                 <h2>{{postTitle}}</h2>
                 <p>{{postContent}}</p>
                 <p>{{category}}</p>                
             </div>
         </div>
+
     </div>
 </div>
-
+</div>
 
 {% endblock %}

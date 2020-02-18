@@ -9,7 +9,7 @@ from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from datetime import datetime
 
-app = Flask(__name__, template_folder='static/frontend/public/')
+app = Flask(__name__, template_folder='static/frontend/public/templates')
 bcrypt = Bcrypt(app)
 app.config.from_object(Config)
 csrf = CSRFProtect(app)
@@ -24,6 +24,9 @@ def before_request():
         if 'username' in session:
                 g.username = session['username']
 
+@app.route('/aboutUs')
+def aboutUs():
+        return render_template('aboutUs.html')
 
 @app.route("/dashboard")
 def dashboard():        
@@ -66,13 +69,59 @@ def groups():
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
-                c.execute('SELECT groupName, groupBio, groupType, groupImage FROM groups');  
+                c.execute('SELECT * FROM groups');  
                 groups = c.fetchall()
-                print(groups)                                                      
-                return render_template('groups.html', groups=groups, username=g.username)
+                print(groups)    
+                if request.method == 'POST':
+                                conn = sqlite3.connect('userData.db')
+                                print ("Group data opened")
+                                c = conn.cursor()
+                                groupImage = "public/groupImages/" + form.groupName.data + '.jpg'
+                                newGroup = [((form.groupName.data), (form.groupBio.data), (form.groupType.data), g.username, '150', (groupImage))]
+                                with conn:
+                                        try:
+                                                insertPost = '''INSERT INTO groups (groupName, groupBio, groupType, groupMembers, groupSize, groupImage) VALUES(?,?,?,?,?,?)'''
+                                                c.executemany(insertPost, newGroup)
+                                                print ("Insert correctly")
+                                        except Exception as e: print(e)                                                        
+                                        flash((g.username) + " Successfully Posted!!")   
+                                return render_template('groups.html', groupImage=groupImage, form=form, groups=groups, username=g.username)                                               
+                return render_template('groups.html', form=form, groups=groups, username=g.username)
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
+
+@app.route("/subgroup/id/<subgroup>", methods=['GET', 'POST'])
+def subgroup(subgroup):    
+        subgroup=subgroup
+        if g.username:
+                form = createGroup(request.form)  
+                conn =sqlite3.connect('userData.db')
+                print ("Opened database successfully")
+                c = conn.cursor()
+                findgroup = ('SELECT * FROM groups WHERE groupId LIKE ?');  
+                c.execute(findgroup, subgroup)
+                groups = c.fetchall()
+                print(groups)    
+                if request.method == 'POST':
+                                conn = sqlite3.connect('userData.db')
+                                print ("Group data opened")
+                                c = conn.cursor()
+                                groupImage = "public/groupImages/" + form.groupName.data + '.jpg'
+                                newGroup = [((form.groupName.data), (form.groupBio.data), (form.groupType.data), g.username, '150', (groupImage))]
+                                with conn:
+                                        try:
+                                                insertPost = '''INSERT INTO groups (groupName, groupBio, groupType, groupMembers, groupSize, groupImage) VALUES(?,?,?,?,?,?)'''
+                                                c.executemany(insertPost, newGroup)
+                                                print ("Insert correctly")
+                                        except Exception as e: print(e)                                                        
+                                        flash((g.username) + " Successfully Posted!!")   
+                                return render_template('subgroups.html', subgroup=subgroup, groupImage=groupImage, form=form, groups=groups, username=g.username)                                               
+                return render_template('subgroups.html', subgroup=subgroup, form=form, groups=groups, username=g.username)
+        else:
+                flash('Please Login to continue')
+                return redirect('Login')
+
 
 
 
@@ -143,7 +192,7 @@ def profile():
                                                         newPost = [(g.username, (form.postTitle.data), (form.postContent.data), (form.category.data))]
                                                         with conn:
                                                                 try:
-                                                                        insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category, dateTime) VALUES(?,?,?,?, datetime('now', 'localtime'))'''
+                                                                        insertPost = '''INSERT INTO userPost (author, postTitle, postContent, category, dateTime) VALUES(?,?,?,?, datetime('now', 'localtime'))'''
                                                                         c.executemany(insertPost, newPost)
                                                                         print ("Insert correctly")
                                                                 except Exception as e: print(e)                                                        
@@ -158,6 +207,7 @@ def profile():
 @app.route("/profile/user/<user>", methods=['GET', 'POST'])
 def profileUserName(user):      
         user = user
+
         form = postStatus(request.form) 
         conn =sqlite3.connect('userData.db')
         print ("Opened database successfully")
@@ -172,10 +222,10 @@ def profileUserName(user):
                 conn = sqlite3.connect('userData.db')
                 print ("User Posts data opened")
                 c = conn.cursor()
-                newPost = [(user, (form.postTitle.data), (form.postContent.data), (form.category.data))]
+                newPost = [(g.username, (form.postTitle.data), (form.postContent.data), (form.category.data))]
                 with conn:
                         try:
-                                insertPost = '''INSERT INTO userPost (username, postTitle, postContent, category) VALUES(?,?,?,?)'''
+                                insertPost = '''INSERT INTO userPost (author, postTitle, postContent, category, dateTime) VALUES(?,?,?,?, datetime('now', 'localtime'))'''
                                 c.executemany(insertPost, newPost)
                                 print ("Insert correctly")
                         except Exception as e: print(e)                                                        

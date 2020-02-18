@@ -20,7 +20,33 @@
     padding:15vmin;
     border-radius: 15px;
   }
+  .about{
+    background:#023837;
+    padding:5vmin;
+    border-radius: 15px;
+  }
+  #groupForm{
+    display:none;
+    background:#023837;
+    padding:5vmin;
+    border-radius: 15px;
+  }
+  
+  
+  
+  .footer{
+    position: absolute;
+    width:100%;
+    bottom: 0;
+    padding:2vmin;
+margin-top:5vmin;
+background:#264f78;
+
+  }
   .body{
+    min-height: 100vh;
+    position: relative;
+    margin: 0;
     font-family: 'Open Sans', sans-serif;
     color:#fff;
     background-color: #01162B;

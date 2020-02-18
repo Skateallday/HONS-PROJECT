@@ -1,0 +1,43 @@
+{% extends "template.html" %}
+{% block content %}
+   
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">
+      &times;
+    </button>
+    {{ message }}
+</div>
+{% endfor %}
+
+<div class="container">
+    <div class="row">    
+        <div class="col-sm-12 ">        
+        </div>
+    </div>
+    
+    <div class="previousPosts">
+        <div class="col-sm-3">
+            <img class="dashboardPhotos" src="{{groupImage}}">                        
+            <h1>Post in {{subgroup}} </h1>  
+            {% for group in groups %}
+            <p>{{group[1]}}</p>  
+            <p>{{group[2]}}</p>   
+            <p>{{group[3]}}</p>   
+            <p>{{group[4]}}</p>                
+
+            {% endfor %}                
+        </div>                    
+    </div>
+               
+                               
+            
+        </div>
+      
+</div>
+
+
+
+
+
+{% endblock %}
