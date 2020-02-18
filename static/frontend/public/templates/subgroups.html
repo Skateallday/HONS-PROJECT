@@ -18,7 +18,6 @@
     
     <div class="previousPosts">
         <div class="col-sm-3">
-            <img class="dashboardPhotos" src="{{groupImage}}">                        
             <h1>Post in {{subgroup}} </h1>  
             {% for group in groups %}
             <p>{{group[1]}}</p>  
@@ -26,7 +25,29 @@
             <p>{{group[3]}}</p>   
             <p>{{group[4]}}</p>                
 
-            {% endfor %}                
+            {% endfor %}    
+            {% for comment in comments %}
+            <p>{{comment[1]}}</p>  
+            <p>{{comment[2]}}</p>   
+            <p>Cheers: {{comment[3]}} Boos: {{comment[4]}}</p>                
+
+            {% endfor %} 
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }} {{ form.csrf_token() }}
+            
+              
+              <label for="comment">Post a comment</label>
+              {% if request.method == 'POST' %}
+              {% for error in form.comment.errors %}
+              <span class="errors">[{{ error }}]</span>
+              {% endfor %}
+              {% endif %}
+              {{ form.comment(class="form-control") }}
+          
+              
+          
+              {{ form.submit(class="btn btn-danger") }}
+            </form>             
         </div>                    
     </div>
                

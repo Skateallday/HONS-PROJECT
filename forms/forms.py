@@ -50,3 +50,7 @@ class createGroup(FlaskForm):
     groupImage = FileField('Upload Profile Image')
     submit = SubmitField("Let's Go!")
 
+class postComment(FlaskForm):
+    comment = StringField('Comment', validators=[DataRequired(), Length(min=10, max=2500)])
+    submit = SubmitField('Send it!')
+

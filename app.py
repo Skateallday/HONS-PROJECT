@@ -4,7 +4,7 @@ import sqlite3
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, session, g, redirect, flash, url_for
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
-from forms.forms import registration, loginForm, createAccount, postStatus, createGroup
+from forms.forms import registration, loginForm, createAccount, postStatus, createGroup, postComment
 from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from datetime import datetime
@@ -95,29 +95,31 @@ def groups():
 def subgroup(subgroup):    
         subgroup=subgroup
         if g.username:
-                form = createGroup(request.form)  
+                form = postComment(request.form)  
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
-                findgroup = ('SELECT * FROM groups WHERE groupId LIKE ?');  
+                findgroup = ('SELECT * FROM groups WHERE groupId LIKE ?') 
                 c.execute(findgroup, subgroup)
                 groups = c.fetchall()
+                loadComments = ('SELECT * FROM groupComments WHERE groupId LIKE ?')
+                c.execute(loadComments, subgroup)
+                comments = c.fetchall()
                 print(groups)    
                 if request.method == 'POST':
                                 conn = sqlite3.connect('userData.db')
                                 print ("Group data opened")
                                 c = conn.cursor()
-                                groupImage = "public/groupImages/" + form.groupName.data + '.jpg'
-                                newGroup = [((form.groupName.data), (form.groupBio.data), (form.groupType.data), g.username, '150', (groupImage))]
+                                comment = [(subgroup, g.username, (form.comment.data), '0', '0' )]
                                 with conn:
                                         try:
-                                                insertPost = '''INSERT INTO groups (groupName, groupBio, groupType, groupMembers, groupSize, groupImage) VALUES(?,?,?,?,?,?)'''
-                                                c.executemany(insertPost, newGroup)
+                                                insertPost = '''INSERT INTO groupComments (groupId, author, comment, cheers, boos) VALUES(?,?,?,?,?)'''
+                                                c.executemany(insertPost, comment)
                                                 print ("Insert correctly")
                                         except Exception as e: print(e)                                                        
                                         flash((g.username) + " Successfully Posted!!")   
-                                return render_template('subgroups.html', subgroup=subgroup, groupImage=groupImage, form=form, groups=groups, username=g.username)                                               
-                return render_template('subgroups.html', subgroup=subgroup, form=form, groups=groups, username=g.username)
+                                return render_template('subgroups.html', subgroup=subgroup,  form=form, comments=comments, groups=groups, username=g.username)                                               
+                return render_template('subgroups.html', subgroup=subgroup, form=form, comments=comments, groups=groups, username=g.username)
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
