@@ -128,57 +128,76 @@ def subgroup(subgroup):
 def cheer(commentId):
         if g.username:
                 commentId=commentId        
-                print(commentId)
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
-                findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
-                c.execute(findgroup, commentId)
-                cheer = c.fetchall()
-                print(cheer)        
-                for cheers in cheer:
-                        with conn:
-                                try:
-                                        c = conn.cursor()
-                                        changeCheers = '''UPDATE  groupComments SET votes = votes + 1 WHERE commentID = ?'''
-                                        c.execute(changeCheers, commentId)
-                                        updateDailyVotes = '''UPDATE accountData SET dailyVotes = dailyVotes - 1 WHERE username = ?'''
-                                        c.execute(updateDailyVotes, [g.username])
-                                        print ("Insert correctly")
-                                except Exception as e:print(e)
+                checkVotes = ('SELECT dailyVotes FROM accountData WHERE username LIKE ?')
+                c.execute(checkVotes, [g.username])
+                votesChecked = c.fetchone()
+                if int(votesChecked[0]) >= 0:
+                        findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
+                        c.execute(findgroup, commentId)
+                        cheer = c.fetchall()
+                        for cheers in cheer:
+                                with conn:
+                                        try:
+                                                c = conn.cursor()
+                                                changeCheers = '''UPDATE  groupComments SET votes = votes + 1 WHERE commentID = ?'''
+                                                c.execute(changeCheers, commentId)
+                                                updateDailyVotes = '''UPDATE accountData SET dailyVotes = dailyVotes - 1 WHERE username = ?'''
+                                                c.execute(updateDailyVotes, [g.username])
+                                                print ("Insert correctly")
+                                        except Exception as e:print(e)
 
-                return redirect('subgroup/id/'+str(cheers[1]))
+                        return redirect('subgroup/id/'+str(cheers[1]))
+                else: 
+                        findgroup = ('SELECT groupId FROM groupComments WHERE commentId LIKE ?') 
+                        c.execute(findgroup, commentId)
+                        groupId = c.fetchone()
+                        flash('You have no more votes left for today!')
+                        return redirect('subgroup/id/'+str(int(groupId[0])))
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
+
+
 
 @app.route("/boo/id/<commentId>")
-def boo(commentId):
+def boo(commentId):        
         if g.username:
-                commentId=commentId
-                print(commentId)
+                commentId=commentId        
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
-                findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
-                c.execute(findgroup, commentId)
-                boo = c.fetchall()
-                print(boo)
-                for boos in boo:
-                        with conn:
-                                try:
-                                        c = conn.cursor()
-                                        changeboos = '''UPDATE  groupComments SET votes = votes - 1 WHERE commentID = ?'''
-                                        c.execute(changeboos, commentId)
-                                        updateDailyVotes = '''UPDATE accountData SET dailyVotes = dailyVotes - 1 WHERE username = ?'''
-                                        c.execute(updateDailyVotes, [g.username])
-                                        print ("Insert correctly")
-                                except Exception as e:print(e)
+                checkVotes = ('SELECT dailyVotes FROM accountData WHERE username LIKE ?')
+                c.execute(checkVotes, [g.username])
+                votesChecked = c.fetchone()
+                if int(votesChecked[0]) >= 0:
+                        findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
+                        c.execute(findgroup, commentId)
+                        cheer = c.fetchall()
+                        for cheers in cheer:
+                                with conn:
+                                        try:
+                                                c = conn.cursor()
+                                                changeCheers = '''UPDATE  groupComments SET votes = votes - 1 WHERE commentID = ?'''
+                                                c.execute(changeCheers, commentId)
+                                                updateDailyVotes = '''UPDATE accountData SET dailyVotes = dailyVotes - 1 WHERE username = ?'''
+                                                c.execute(updateDailyVotes, [g.username])
+                                                print ("Insert correctly")
+                                        except Exception as e:print(e)
 
-                return redirect('subgroup/id/'+str(boos[1]))
+                        return redirect('subgroup/id/'+str(cheers[1]))
+                else: 
+                        findgroup = ('SELECT groupId FROM groupComments WHERE commentId LIKE ?') 
+                        c.execute(findgroup, commentId)
+                        groupId = c.fetchone()
+                        flash('You have no more votes left for today!')
+                        return redirect('subgroup/id/'+str(int(groupId[0])))
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
+       
 
 
 @app.route('/Login/', methods=['GET', 'POST'])
