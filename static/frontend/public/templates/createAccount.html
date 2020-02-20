@@ -1,6 +1,5 @@
 {% extends "template.html" %}
 {% block content %}
-<div class="container missing">
 
 
 {% for message in get_flashed_messages() %}
@@ -12,9 +11,10 @@
 </div>
 {% endfor %}
 
+<div class="container previousPosts">
     <div class="row">
   <div class="col-sm-12 ">
-<h1>Create your account!</h1>
+<h1>Perfect your account!</h1>
    <form method="POST" action="" enctype="multipart/form-data">
       {{ form.hidden_tag() }} {{ form.csrf_token() }}
   

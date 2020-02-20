@@ -1,94 +1,68 @@
-{% extends "template.html" %}
-{% block content %}
-   
-{% for message in get_flashed_messages() %}
+{% extends "template.html" %} {% block content %} {% for message in get_flashed_messages() %}
 <div class="alert alert-warning">
     <button type="button" class="close" data-dismiss="alert">
-      &times;
+        &times;
     </button>
     {{ message }}
 </div>
 {% endfor %}
 
 <div class="container">
-    <div class="row">    
-        <div class="col-sm-12 ">
-        
-        <h1>Join or Create a group today!</h1>
-</div>
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h1>Join or Create a group today!</h1>
+        </div>
     </div>
+</div>
+<div class="container">
     <div class="row">
         <div class="col-sm-6">
             <button id="slider" class="btn btn-primary">Create Group!</button>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12" id="groupForm">
-            <form method="POST" action="" enctype="multipart/form-data">
+        <div class="col-sm-12" class="previousPosts" id="groupForm">
+            <form method="POST"  enctype="multipart/form-data">
                 {{ form.hidden_tag() }} {{ form.csrf_token() }}
-            
-              
-              <label for="groupName">Group Name</label>
-              {% if request.method == 'POST' %}
-              {% for error in form.groupName.errors %}
-              <span class="errors">[{{ error }}]</span>
-              {% endfor %}
-              {% endif %}
-              {{ form.groupName(class="form-control") }}
-          
-              <label for="groupBio">Group Details</label>
-              {% if request.method == 'POST' %}
-              {% for error in form.groupBio.errors %}
-              <span class="errors">[{{ error }}]</span>
-              {% endfor %}
-              {% endif %}
-              {{ form.groupBio(class="form-control") }}
-          
-              <label for="groupType">Group Type</label>
-              {% if request.method == 'POST' %}
-              {% for error in form.groupType.errors %}
-              <span class="errors">[{{ error }}]</span>
-              {% endfor %}
-              {% endif %}
-              {{ form.groupType(class="form-control") }}
-              <label for="upload">Upload Profile Photo</label>
 
-                {% if request.method == 'POST' %}
-                {% for error in form.groupImage.errors %}
-                <span class="errors">[{{ error }}]</span>
-                {% endfor %}
-                {% endif %}
+                <label for="groupName">Group Name</label>
+                {% if request.method == 'POST' %} {% for error in form.groupName.errors %}
+                <span class="errors">[{{ error }}]</span> {% endfor %} {% endif %} {{ form.groupName(class="form-control") }}
+
+                <label for="groupBio">Group Details</label>
+                {% if request.method == 'POST' %} {% for error in form.groupBio.errors %}
+                <span class="errors">[{{ error }}]</span> {% endfor %} {% endif %} {{ form.groupBio(class="form-control") }}
+
+                <label for="groupType">Group Type</label>
+                {% if request.method == 'POST' %} {% for error in form.groupType.errors %}
+                <span class="errors">[{{ error }}]</span> {% endfor %} {% endif %} {{ form.groupType(class="form-control") }}
+                <label for="upload">Upload Profile Photo</label>
+
+                {% if request.method == 'POST' %} {% for error in form.groupImage.errors %}
+                <span class="errors">[{{ error }}]</span> {% endfor %} {% endif %}
                 <p>{{ form.groupImage }}</p>
-          
-              {{ form.submit(class="btn btn-danger") }}
-            </form> 
 
-        </div></div>
-                <div class="previousPosts">
-                    <div class="row"> {% for group in groups %}
-                        <div class="col-sm-3">
-                            <img class="dashboardPhotos" src="{{groupImage}}">                        
-                            <a href={{url_for('subgroup', subgroup=group[0])}}><h3>{{group[1]}}</h3></a>
-                            <h2>{{group[2]}}</h2>
-                            <p>{{group[3]}}</p>
-                            <a href={{url_for('profileUserName', user=group[4])}}><p>{{group[4]}}</p></a> 
-                        </div> {% endfor %}
-                    </div>
-                    
-                </div>
-               
-                               
-            
+                {{ form.submit(class="btn btn-danger") }}
+            </form>
+
         </div>
-    <div class="row">
-        <div class="col-sm-6">    
-            
+    </div>{% for group in groups %}
+    <div class="previousPosts">
+        <div class="row"> 
+            <div class="col-sm-12">
+                <img class="dashboardPhotos" src="{{groupImage}}">
+                <a href={{url_for( 'subgroup', subgroup=group[0])}}><h3>{{group[1]}}</h3></a>
+                <h2>{{group[2]}}</h2>
+                <p>{{group[3]}}</p>
+                <a href={{url_for( 'profileUserName', user=group[4])}}>
+                    <p>{{group[4]}}</p>
+                </a>
+            </div> 
         </div>
-    </div>        
+    </div>
+{% endfor %}
+
 </div>
-
-
-
-
 
 {% endblock %}

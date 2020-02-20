@@ -23,8 +23,8 @@
         <div class="col-sm-12">
             <p>{{comment[2]}}</p>
             <p>{{comment[3]}}</p>
-            <p>Cheers: {{comment[4]}} Boos: {{comment[5]}}</p>
-            <p>Posted: {{comment[6]}}</p>
+            <p>Rating: {{comment[4]}} </p>
+            <p>Posted: {{comment[5]}}</p>
             <a href={{url_for('cheer', commentId=comment[0], subgroup=comment[1])}} class="btn btn-primary">Cheer!</a><a href={{url_for('boo', commentId=comment[0], subgroup=subgroup)}} class="btn btn-danger">Boo!</a>
 
         </div>
