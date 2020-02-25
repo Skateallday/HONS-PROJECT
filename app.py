@@ -8,6 +8,7 @@ from forms.forms import registration, loginForm, createAccount, postStatus, crea
 from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from datetime import datetime
+import scheduler
 
 app = Flask(__name__, template_folder='static/frontend/public/templates')
 bcrypt = Bcrypt(app)
@@ -18,11 +19,13 @@ UPLOAD_FOLDER = 'static/frontend/public/profilePhotos'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['jpg'])
 
+
 @app.before_request
 def before_request():
         g.username = None
         if 'username' in session:
                 g.username = session['username']
+
 
 @app.route('/aboutUs')
 def aboutUs():
@@ -396,4 +399,5 @@ def page_not_found(e):
         return render_template('404.html'), 404
 
 if __name__ == '__main__':
-      app.run('localhost', 5000, debug=True)
+        scheduler.changeLikesAvailable()
+        app.run('localhost', 5000, debug=True)

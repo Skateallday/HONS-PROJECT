@@ -1,16 +1,23 @@
-import time
-import atexit
-
-from apscheduler.schedulers.background import BackgroundScheduler
-
-
-def print_date_time():
-    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+from flask import Flask
+from flask_apscheduler import APScheduler
+import sqlite3
 
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=print_date_time, trigger="interval", seconds=3)
-scheduler.start()
+app = Flask(__name__)
+scheduler = APScheduler()
 
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
+def changeLikesAvailable():
+    conn =sqlite3.connect('userData.db')
+    print("Opened database successfully")
+    c = conn.cursor()
+    with conn:
+        try:            
+            c.execute('UPDATE accountData SET dailyVotes = 5 WHERE dailyVotes < 5')    
+            print('Daily Votes updated')
+        except Exception as e: print(e)       
+    
+   
+
+if __name__ =='__main__':
+    scheduler.add_job(id='Update Daily Votes', func=changeLikesAvailable, trigger="interval", seconds=86400)
+    scheduler.start()
