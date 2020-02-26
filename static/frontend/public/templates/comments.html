@@ -9,7 +9,7 @@
 <div class="container">    
     <div class="previousPosts">
         <div class="col-sm-12">
-            <h1>Post in {{subgroup}}</h1> 
+            <h1>Post in {{groupPost}}</h1> 
             {% for group in groups %}
                 <p>{{group[1]}}</p>
                 <p>{{group[2]}}</p>
@@ -22,7 +22,7 @@
     <div class="previousPosts">
         <div class="col-sm-12">
             <p>{{comment[2]}}</p>
-            <a href={{url_for( 'groupPosts', groupPost=comment[1])}}><p>{{comment[3]}}</p></a>
+            <p>{{comment[3]}}</p>
             <p>Rating: {{comment[4]}} </p>
             <p>Posted: {{comment[5]}}</p>
             <a href={{url_for('cheer', commentId=comment[0], subgroup=comment[1])}} class="btn btn-primary">Cheer!</a><a href={{url_for('boo', commentId=comment[0], subgroup=subgroup)}} class="btn btn-danger">Boo!</a>
@@ -37,7 +37,7 @@
                 <label for="post">Make a group post!</label>
                 {% if request.method == 'POST' %} {% for error in form.post.errors %}
                 <span class="errors">[{{ error }}]</span> {% endfor %} {% endif %} 
-                {{ form.post(class="form-control") }} 
+                {{ form.comment(class="form-control") }} 
                 {{ form.submit(class="btn btn-danger") }}
             </form>
         </div>

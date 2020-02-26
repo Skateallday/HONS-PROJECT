@@ -4,7 +4,7 @@ import sqlite3
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, session, g, redirect, flash, url_for
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
-from forms.forms import registration, loginForm, createAccount, postStatus, createGroup, postComment
+from forms.forms import registration, loginForm, createAccount, postStatus, createGroup, groupPost, postComment
 from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from datetime import datetime
@@ -42,8 +42,6 @@ def dashboard():
                 posts = c.fetchall()
                 print(posts) 
                 for post in posts:
-                        author = post[0]
-                        imageName = [1]
                         postTitle = post[2]
                         postContent = post[3]
                         category = post[4]
@@ -97,15 +95,16 @@ def groups():
 @app.route("/subgroup/id/<subgroup>", methods=['GET', 'POST'])
 def subgroup(subgroup):    
         subgroup=subgroup
+        print(subgroup)
         if g.username:
-                form = postComment(request.form)  
+                form = groupPost(request.form)  
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
                 findgroup = ('SELECT * FROM groups WHERE groupId LIKE ?') 
                 c.execute(findgroup, subgroup)
                 groups = c.fetchall()
-                loadComments = ('SELECT * FROM groupComments WHERE groupId LIKE ?')
+                loadComments = ('SELECT * FROM groupPosts WHERE groupId LIKE ?')
                 c.execute(loadComments, subgroup)
                 comments = c.fetchall()
                 print(groups)    
@@ -113,7 +112,42 @@ def subgroup(subgroup):
                                 conn = sqlite3.connect('userData.db')
                                 print ("Group data opened")
                                 c = conn.cursor()
-                                comment = [(subgroup, g.username, (form.comment.data), '0' )]
+                                comment = [(subgroup, g.username, (form.post.data), '0' )]
+                                with conn:
+                                        try:
+                                                insertPost = '''INSERT INTO groupPosts (groupId, author, comment, votes, dateTime) VALUES(?,?,?,?, datetime('now', 'localtime'))'''
+                                                c.executemany(insertPost, comment)
+                                                print ("Insert correctly")
+                                        except Exception as e: print(e)                                                        
+                                        flash((g.username) + " Successfully Posted!!")   
+                                return render_template('subgroups.html', subgroup=subgroup,  form=form, comments=comments, groups=groups, username=g.username)                                               
+                return render_template('subgroups.html', subgroup=subgroup, form=form, comments=comments, groups=groups, username=g.username)
+        else:
+                flash('Please Login to continue')
+                return redirect('Login')
+
+@app.route("/groupPost/id/<groupPost>", methods=['GET', 'POST'])
+def groupPosts(groupPost):    
+        groupPost=groupPost
+        print(groupPost)
+        if g.username:
+                form = postComment(request.form)  
+                conn =sqlite3.connect('userData.db')
+                print ("Opened database successfully")
+                c = conn.cursor()
+                findgroup = ('SELECT * FROM groupPosts WHERE groupId LIKE ?') 
+                c.execute(findgroup, groupPost)
+                groups = c.fetchone()
+                loadComments = ('SELECT * FROM groupComments WHERE groupId LIKE ?')
+                c.execute(loadComments, groupPost)
+                comments = c.fetchall()
+                print(groups)    
+
+                if request.method == 'POST':
+                                conn = sqlite3.connect('userData.db')
+                                print ("Group data opened")
+                                c = conn.cursor()
+                                comment = [(groupPost, g.username, (form.comment.data), '0' )]
                                 with conn:
                                         try:
                                                 insertPost = '''INSERT INTO groupComments (groupId, author, comment, votes, dateTime) VALUES(?,?,?,?, datetime('now', 'localtime'))'''
@@ -121,8 +155,8 @@ def subgroup(subgroup):
                                                 print ("Insert correctly")
                                         except Exception as e: print(e)                                                        
                                         flash((g.username) + " Successfully Posted!!")   
-                                return render_template('subgroups.html', subgroup=subgroup,  form=form, comments=comments, groups=groups, username=g.username)                                               
-                return render_template('subgroups.html', subgroup=subgroup, form=form, comments=comments, groups=groups, username=g.username)
+                                return render_template('comments.html', groupPost=groupPost,  form=form, comments=comments, groups=groups, username=g.username)                                               
+                return render_template('comments.html', groupPost=groupPost, form=form, comments=comments, groups=groups, username=g.username)
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
@@ -138,14 +172,14 @@ def cheer(commentId):
                 c.execute(checkVotes, [g.username])
                 votesChecked = c.fetchone()
                 if int(votesChecked[0]) >= 0:
-                        findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
+                        findgroup = ('SELECT * FROM groupPosts WHERE commentId LIKE ?') 
                         c.execute(findgroup, commentId)
                         cheer = c.fetchall()
                         for cheers in cheer:
                                 with conn:
                                         try:
                                                 c = conn.cursor()
-                                                changeCheers = '''UPDATE  groupComments SET votes = votes + 1 WHERE commentID = ?'''
+                                                changeCheers = '''UPDATE  groupPosts SET votes = votes + 1 WHERE commentID = ?'''
                                                 c.execute(changeCheers, commentId)
                                                 updateDailyVotes = '''UPDATE accountData SET dailyVotes = dailyVotes - 1 WHERE username = ?'''
                                                 c.execute(updateDailyVotes, [g.username])
@@ -154,7 +188,7 @@ def cheer(commentId):
 
                         return redirect('subgroup/id/'+str(cheers[1]))
                 else: 
-                        findgroup = ('SELECT groupId FROM groupComments WHERE commentId LIKE ?') 
+                        findgroup = ('SELECT groupId FROM groupPosts WHERE commentId LIKE ?') 
                         c.execute(findgroup, commentId)
                         groupId = c.fetchone()
                         flash('You have no more votes left for today!')
@@ -176,14 +210,14 @@ def boo(commentId):
                 c.execute(checkVotes, [g.username])
                 votesChecked = c.fetchone()
                 if int(votesChecked[0]) >= 0:
-                        findgroup = ('SELECT * FROM groupComments WHERE commentId LIKE ?') 
+                        findgroup = ('SELECT * FROM groupPosts WHERE commentId LIKE ?') 
                         c.execute(findgroup, commentId)
                         cheer = c.fetchall()
                         for cheers in cheer:
                                 with conn:
                                         try:
                                                 c = conn.cursor()
-                                                changeCheers = '''UPDATE  groupComments SET votes = votes - 1 WHERE commentID = ?'''
+                                                changeCheers = '''UPDATE  groupPosts SET votes = votes - 1 WHERE commentID = ?'''
                                                 c.execute(changeCheers, commentId)
                                                 updateDailyVotes = '''UPDATE accountData SET dailyVotes = dailyVotes - 1 WHERE username = ?'''
                                                 c.execute(updateDailyVotes, [g.username])
@@ -192,7 +226,7 @@ def boo(commentId):
 
                         return redirect('subgroup/id/'+str(cheers[1]))
                 else: 
-                        findgroup = ('SELECT groupId FROM groupComments WHERE commentId LIKE ?') 
+                        findgroup = ('SELECT groupId FROM groupPosts WHERE commentId LIKE ?') 
                         c.execute(findgroup, commentId)
                         groupId = c.fetchone()
                         flash('You have no more votes left for today!')
