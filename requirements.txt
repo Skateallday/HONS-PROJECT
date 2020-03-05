@@ -64,7 +64,7 @@ validators==0.12.6
 virtualenv==16.0.0
 virtualenv-clone==0.3.0
 WebOb==1.8.5
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 wrapt==1.11.1
 WTForms==2.2.1
 WTForms-Components==0.10.3
