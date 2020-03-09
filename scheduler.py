@@ -12,7 +12,7 @@ def changeLikesAvailable():
     c = conn.cursor()
     with conn:
         try:            
-            c.execute('UPDATE accountData SET dailyVotes = 5 WHERE dailyVotes < 5')    
+            c.execute('UPDATE accountData SET dailyVotes = 4 WHERE dailyVotes < 4')    
             print('Daily Votes updated')
         except Exception as e: print(e)       
     

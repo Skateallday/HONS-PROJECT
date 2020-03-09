@@ -171,7 +171,7 @@ def cheer(commentId):
                 checkVotes = ('SELECT dailyVotes FROM accountData WHERE username LIKE ?')
                 c.execute(checkVotes, [g.username])
                 votesChecked = c.fetchone()
-                if int(votesChecked[0]) >= 0:
+                if int (votesChecked[0]) >= 0:
                         findgroup = ('SELECT * FROM groupPosts WHERE commentId LIKE ?') 
                         c.execute(findgroup, commentId)
                         cheer = c.fetchall()
@@ -376,7 +376,7 @@ def SignUp():
                         with conn:
                                 c =conn.cursor()
                                 try:
-                                        signupSQL = '''INSERT INTO accountData (username, password, email, bio, imageName, interests) VALUES(?,?,?,?,?,?)'''
+                                        signupSQL = '''INSERT INTO accountData (username, password, email, bio, imageName, interests, dailyVotes) VALUES(?,?,?,?,?,?,4)'''
                                         c.executemany(signupSQL, newEntry)
                                         print ("Insert correctly")
                                 except:
