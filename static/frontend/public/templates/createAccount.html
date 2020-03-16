@@ -51,8 +51,10 @@
     {% endif %}
     {{form.interests(class="form-control")}}
 
-    {{ form.submit(class="btn btn-danger") }}
+    {{ form.submit(class="btn btn-success") }}
   </form> 
+
+  <a href={{url_for('deleteProfile')}} class="btn btn-danger">Delete Account?</a>
 </div>
 </div>
 

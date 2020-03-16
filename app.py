@@ -390,6 +390,10 @@ def SignUp():
                         return render_template("signup.html", form=registerForm)
                 return render_template('signup.html', form=registerForm)
 
+@app.route('/deleteProfile', methods=['GET', 'POST'])
+def deleteProfile():
+        return redirect("signup")
+
 @app.route('/account', methods=['GET', 'POST'])
 def addAccount():
         if g.username:         
