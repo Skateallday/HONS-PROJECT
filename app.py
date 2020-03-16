@@ -79,10 +79,13 @@ def groups():
                                 c = conn.cursor()
                                 groupImage = "public/groupImages/" + form.groupName.data + '.jpg'
                                 newGroup = [((form.groupName.data), (form.groupBio.data), (form.groupType.data), g.username, '150', (groupImage))]
+                                newAdmin = [((form.groupName.data), g.username)]
                                 with conn:
                                         try:
                                                 insertPost = '''INSERT INTO groups (groupName, groupBio, groupType, groupMembers, groupSize, groupImage) VALUES(?,?,?,?,?,?)'''
                                                 c.executemany(insertPost, newGroup)
+                                                createAdmin = '''INSERT INTO group_Admins(adminName, groupName) VALUES(?,?)'''
+                                                c.executemany(createAdmin, newAdmin)
                                                 print ("Insert correctly")
                                         except Exception as e: print(e)                                                        
                                         flash((g.username) + " Successfully Posted!!")   
