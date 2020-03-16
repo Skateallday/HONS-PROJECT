@@ -1,0 +1,46 @@
+{% extends "template.html" %} {% block content %} {% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">
+        &times;
+    </button>
+    {{ message }}
+</div>
+{% endfor %}
+<div class="container">    
+    <div class="previousPosts">
+        <div class="col-sm-12">
+            <h1>Post in {{groupPost}}</h1> 
+            {% for group in groups %}
+                <p>{{group[1]}}</p>
+                <p>{{group[2]}}</p>
+                <p>{{group[3]}}</p>
+                <p>{{group[4]}}</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% for comment in comments %}
+    <div class="previousPosts">
+        <div class="col-sm-12">
+            <p>{{comment[2]}}</p>
+            <p>{{comment[3]}}</p>
+            <p>Rating: {{comment[4]}} </p>
+            <p>Posted: {{comment[5]}}</p>
+            <a href={{url_for('cheer', commentId=comment[0], subgroup=comment[1])}} class="btn btn-primary">Cheer!</a><a href={{url_for('boo', commentId=comment[0], subgroup=subgroup)}} class="btn btn-danger">Boo!</a>
+
+        </div>
+    </div>
+    {% endfor %}
+    <div class="previousPosts">
+        <div class="col-sm-12">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }} {{ form.csrf_token() }}
+                <label for="post">Make a group post!</label>
+                {% if request.method == 'POST' %} {% for error in form.post.errors %}
+                <span class="errors">[{{ error }}]</span> {% endfor %} {% endif %} 
+                {{ form.comment(class="form-control") }} 
+                {{ form.submit(class="btn btn-danger") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

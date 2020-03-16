@@ -1,0 +1,46 @@
+{% extends "template.html" %}
+{% block content %}
+   
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">
+      &times;
+    </button>
+    {{ message }}
+</div>
+{% endfor %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Welcome {{username}}</h1>
+
+                {% for post in posts %}
+                <div class="previousPosts">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <img class="dashboardPhotos" src={{url_for('static', filename=post[1])}}>
+                        </div>
+                        <div class="col-sm-9">
+                            <h3><a href={{url_for('profileUserName', user=post[0])}}>{{post[0]}}</a></h3>
+                            <h2>{{post[2]}}</h2>
+                            <p>{{post[3]}}</p>
+                            <p>{{post[4]}}</p> 
+                            <p>{{post[5]}}</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+                               
+            
+        </div>
+    </div>
+         
+</div>
+
+       
+
+
+
+{% endblock %}

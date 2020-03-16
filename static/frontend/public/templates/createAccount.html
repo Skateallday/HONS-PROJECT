@@ -1,0 +1,64 @@
+{% extends "template.html" %}
+{% block content %}
+
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">
+      &times;
+    </button>
+    {{ message }}
+</div>
+{% endfor %}
+
+<div class="container previousPosts">
+    <div class="row">
+  <div class="col-sm-12 ">
+<h1>Perfect your account!</h1>
+   <form method="POST" action="" enctype="multipart/form-data">
+      {{ form.hidden_tag() }} {{ form.csrf_token() }}
+  
+    
+    <label for="bio">Type a Bio here!</label>
+    {% if request.method == 'POST' %}
+    {% for error in form.bio.errors %}
+    <span class="errors">[{{ error }}]</span>
+    {% endfor %}
+    {% endif %}
+    {{ form.bio(class="form-control") }}
+
+    <label for="upload">Upload Profile Photo</label>
+    {% if request.method == 'POST' %}
+    {% for error in form.upload.errors %}
+    <span class="errors">[{{ error }}]</span>
+    {% endfor %}
+    {% endif %}
+    <p>    {{ form.upload }}
+    </p>
+    <label for="imageName">Image Title</label>
+    {% if request.method == 'POST' %}
+    {% for error in form.imageName.errors %}
+    <span class="errors">[{{ error }}]</span>
+    {% endfor %}
+    {% endif %}
+    {{ form.imageName(class="form-control") }}
+
+    <label for="interests">Main Hobby or Interests</label>
+    {% if request.method == 'POST' %}
+    {% for error in form.interests.errors %}
+    <span class="errors">[{{ error }}]</span>
+    {% endfor %}
+    {% endif %}
+    {{form.interests(class="form-control")}}
+
+    {{ form.submit(class="btn btn-success") }}
+  </form> 
+
+  <a href={{url_for('deleteProfile')}} class="btn btn-danger">Delete Account?</a>
+</div>
+</div>
+
+</div>
+
+
+{% endblock %}

@@ -1,89 +1,129 @@
 .App {
-    text-align: center;
-  }
-  
-  .App-logo {
-    height: 20vmin;
-    pointer-events: none;
-  }
-  
-  .SignUpContainer{
-    margin-top:10vmin;
-    margin-bottom:10vmin;
-    background: #264f78;
-    border-radius: 30px;
-    padding:20px;
-  }
-  .missing{
-    background:#023837;
-    padding:5vmin;
-    border-radius: 15px;
-  }
-  .body{
-    font-family: 'Open Sans', sans-serif;
-    color:#fff;
-    background-color: #01162B;
-    background-image: url(background2.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-.logins{
-  margin-top:25vh;
+	text-align: center;
 }
-.status-box{
-  margin-top:5vmin;
-  background-color:#023837;
-  border-radius: 15px;
-padding:15px;}
 
-.previousPosts{
-  background-color:#023837;
-  border-radius: 15px;
-padding:15px;
-margin-top:5vmin;
+.App-logo {
+	height: 20vmin;
+	pointer-events: none;
 }
-  .crammer{
-    font-family: 'Open Sans', sans-serif;
-    color:#FF6974;
-    font-size:58px;
-  }
-  .button {
-    background-color: #023837; 
-    color: #fff;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    border-radius: 15px;
-  }
-  
-  .form{
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-      animation: App-logo-spin infinite 20s linear;
-    }
-  }
-  
-  .SignUp-background {
-  
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  .LoginBackground {
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  
-  .App-link {
-    color: #61dafb;
-  }
-  
+
+.SignUpContainer {
+	margin-top: 10vmin;
+	margin-bottom: 10vmin;
+	background: #264f78;
+	border-radius: 30px;
+	padding: 20px;
+}
+
+.missing {
+	background: #023837;
+	margin-top: 15vmin;
+	padding: 15vmin;
+	border-radius: 15px;
+}
+
+.about {
+	background: #023837;
+	padding: 5vmin;
+	border-radius: 15px;
+}
+
+#groupForm {
+	display: none;
+	background-color: #023837;
+	border-radius: 15px;
+	padding: 15px;
+	margin-top: 5vmin;
+}
+
+.footer {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	padding: 2vmin;
+	margin-top: 5vmin;
+	background: #264f78;
+}
+
+.footer a {
+	color: #fff;
+}
+
+.body {
+	min-height: 100vh;
+	position: relative;
+	margin: 0;
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+	background-color: #01162B;
+	background-image: url(background2.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+
+.dashboardPhotos {
+	width: 100%;
+	height: auto;
+}
+
+.status-box {
+	margin-top: 5vmin;
+	background-color: #023837;
+	border-radius: 15px;
+	padding: 15px;
+}
+
+.previousPosts {
+	background-color: #023837;
+	border-radius: 15px;
+	padding: 15px;
+	margin-top: 5vmin;
+}
+
+.crammer {
+	font-family: 'Open Sans', sans-serif;
+	color: #FF6974;
+	font-size: 58px;
+}
+
+.button {
+	background-color: #023837;
+	color: #fff;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	border-radius: 15px;
+}
+
+.form {
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
+}
+
+.SignUp-background {
+	font-size: calc(10px + 2vmin);
+	color: white;
+}
+
+.LoginBackground {
+	font-size: calc(10px + 2vmin);
+	color: white;
+}
+
+.App-link {
+	color: #61dafb;
+}
