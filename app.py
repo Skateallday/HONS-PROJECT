@@ -38,7 +38,7 @@ def dashboard():
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
-                c.execute('SELECT author, imageName, postTitle, postContent, category, dateTime FROM accountData INNER JOIN userPost ON userPost.author = accountData.username ORDER BY dateTime DESC');  
+                c.execute('SELECT author, imageName, postTitle, postContent, category, dateTime FROM accountData INNER JOIN userPost ON userPost.author = accountData.username ORDER BY dateTime DESC')  
                 posts = c.fetchall()
                 print(posts) 
                 for post in posts:
@@ -70,7 +70,7 @@ def groups():
                 conn =sqlite3.connect('userData.db')
                 print ("Opened database successfully")
                 c = conn.cursor()
-                c.execute('SELECT * FROM groups');  
+                c.execute('SELECT * FROM groups')
                 groups = c.fetchall()
                 print(groups)    
                 if request.method == 'POST':
@@ -79,10 +79,13 @@ def groups():
                                 c = conn.cursor()
                                 groupImage = "public/groupImages/" + form.groupName.data + '.jpg'
                                 newGroup = [((form.groupName.data), (form.groupBio.data), (form.groupType.data), g.username, '150', (groupImage))]
+                                newAdmin = [((form.groupName.data), g.username)]
                                 with conn:
                                         try:
                                                 insertPost = '''INSERT INTO groups (groupName, groupBio, groupType, groupMembers, groupSize, groupImage) VALUES(?,?,?,?,?,?)'''
                                                 c.executemany(insertPost, newGroup)
+                                                createAdmin = '''INSERT INTO group_Admins(adminName, groupName) VALUES(?,?)'''
+                                                c.executemany(createAdmin, newAdmin)
                                                 print ("Insert correctly")
                                         except Exception as e: print(e)                                                        
                                         flash((g.username) + " Successfully Posted!!")   
@@ -244,19 +247,22 @@ def LogIn():
                 conn = sqlite3.connect('userData.db')                
                 with conn:
                         c = conn.cursor()
-                        find_user = ("SELECT * FROM accountData WHERE username = ?")
-                        c.execute(find_user, [(form.username.data)])  
-                        results =c.fetchall()
-                        
-                        userResults = results[0]
-                        if bcrypt.check_password_hash(userResults[2],(form.password.data)):
-                                session['username'] = (form.username.data)
-                                return redirect(url_for('dashboard'))
-                        else:
-                                flash('Either username or password was not recognised')
-                                return render_template('login.html', form=form)                                 
-                return render_template("login.html", form=form)        
-        return render_template("login.html", form=form)
+                        try:
+                                find_user = ("SELECT * FROM accountData WHERE username = ?")
+                                c.execute(find_user, [(form.username.data)])
+                                results =c.fetchall()                        
+                                userResults = results[0]
+                                if bcrypt.check_password_hash(userResults[2],(form.password.data)):
+                                        session['username'] = (form.username.data)
+                                        return redirect(url_for('dashboard'))
+                                else:
+                                        flash('Either username or password was not recognised')
+                                        return render_template('login.html', form=form)   
+                        except Exception as e:print(e)
+
+                        flash('Either username or password was not recognised')
+                        return render_template('login.html', form=form)                                 
+        return render_template("login.html", form=form)        
 
 @app.route("/logout")
 def logout():        
@@ -284,7 +290,6 @@ def profile():
                 print(results) 
                 if results:
                         for row in results:
-                                username = row[0]
                                 bio = row[3]
                                 img_url = 'static/' +row[4]
                                 interests = row[5]                                
@@ -343,7 +348,6 @@ def profileUserName(user):
         else: 
                 if results:
                         for row in results:
-                                username = row[0]
                                 bio = row[3]
                                 img_url = '../../static/' +row[4]
                                 interests = row[5]                                
@@ -381,8 +385,8 @@ def SignUp():
                                         print ("Insert correctly")
                                 except:
                                         flash("This is already an account, please log in with those details or change details.")
-                                        return render_template("signup.html", form=registerForm)
                                         c.commit()
+                                        return render_template("signup.html", form=registerForm)
                                 flash((registerForm.username.data) + " Successfully Registered!")
                                 session['logged_in'] = True
                                 session['username'] = (registerForm.username.data)
@@ -415,7 +419,6 @@ def addAccount():
                         with conn:
                                 c =conn.cursor()
                                 c.execute('SELECT * FROM accountData WHERE username LIKE (?)', (g.username, ))
-                                results = c.fetchall()
                                 try:
                                         sql = ('''UPDATE accountData SET bio=?, imageName=?, interests=? WHERE username =?''')
                                         c.executemany(sql, entry)
