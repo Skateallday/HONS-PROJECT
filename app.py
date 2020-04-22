@@ -8,7 +8,6 @@ from forms.forms import registration, loginForm, createAccount, postStatus, crea
 from config import Config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from datetime import datetime
-import scheduler
 
 app = Flask(__name__, template_folder='static/frontend/public/templates')
 bcrypt = Bcrypt(app)
