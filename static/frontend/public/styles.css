@@ -60,6 +60,8 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
+	word-wrap: break-word;
+
 }
 
 
@@ -73,6 +75,14 @@
 	background-color: #023837;
 	border-radius: 15px;
 	padding: 15px;
+}
+
+.groupBoxes {
+	background-color: #023837;
+	border-radius: 15px;
+	margin: 15px;
+	margin-top: 5vmin;
+
 }
 
 .previousPosts {

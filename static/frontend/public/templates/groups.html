@@ -47,21 +47,27 @@
             </form>
 
         </div>
-    </div>{% for group in groups %}
-    <div class="previousPosts">
+    </div>    
         <div class="row"> 
-            <div class="col-sm-12">
-                <img class="dashboardPhotos" src="{{groupImage}}">
-                <a href={{url_for( 'subgroup', subgroup=group[0])}}><h3>{{group[1]}}</h3></a>
-                <h2>{{group[2]}}</h2>
-                <p>{{group[3]}}</p>
-                <a href={{url_for( 'profileUserName', user=group[4])}}>
-                    <p>{{group[4]}}</p>
-                </a>
-            </div> 
+            {% for group in groups %}
+            
+                {% if i == 2 %}
         </div>
-    </div>
-{% endfor %}
+                    {% set i = 0 %}   
+                {% else %} 
+                        <div class="groupBoxes col-sm-3">
+                            <img class="dashboardPhotos" src="{{groupImage}}">
+                            <a href={{url_for( 'subgroup', subgroup=group[0])}}><h3>{{group[1]}}</h3></a>
+                            <h2>{{group[2]}}</h2>
+                            <p>{{group[3]}}</p>
+                            <a href={{url_for( 'profileUserName', user=group[4])}}><p>{{group[4]}}</p></a>
+                        </div> 
+                    {% set i = i+1 %}
+                {% endif %}
+            
+            {% endfor %}
+       </div> 
+   
 
 </div>
 

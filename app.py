@@ -89,8 +89,8 @@ def groups():
                                                 print ("Insert correctly")
                                         except Exception as e: print(e)                                                        
                                         flash((g.username) + " Successfully Posted!!")   
-                                return render_template('groups.html', groupImage=groupImage, form=form, groups=groups, username=g.username)                                               
-                return render_template('groups.html', form=form, groups=groups, username=g.username)
+                                return render_template('groups.html', i=0, groupImage=groupImage, form=form, groups=groups, username=g.username)                                               
+                return render_template('groups.html', form=form, i=0, groups=groups, username=g.username)
         else:
                 flash('Please Login to continue')
                 return redirect('Login')
